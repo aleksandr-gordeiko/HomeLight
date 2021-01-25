@@ -1,6 +1,6 @@
-import asyncio
-from pywizlight import discovery, wizlight
-from pywizlight.bulb import PilotBuilder
+from pywizlight import discovery
+
+from scenarios import *
 
 
 async def getlight() -> wizlight or None:
@@ -14,15 +14,19 @@ async def getlight() -> wizlight or None:
 		return None
 
 
-async def blink(bulb: wizlight):
-	await bulb.turn_off()
-	await bulb.turn_on()
-
-
 async def main():
+	"""bulb = await getlight()
+	if bulb is None:
+		return"""
 	bulb = wizlight("192.168.50.233")
 
-	await blink(bulb)
+	while True:
+		await wake(bulb)
+		await getup(bulb)
+		await work(bulb)
+		await chill(bulb)
+		await relax(bulb)
+		await sleep(bulb)
 
 
 if __name__ == "__main__":
