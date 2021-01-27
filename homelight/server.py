@@ -1,32 +1,16 @@
-from pywizlight import discovery
-
-from scenarios import *
-
-
-async def getlight() -> wizlight or None:
-	_bulbs = await discovery.discover_lights("192.168.50.255")
-
-	try:
-		_bulb = _bulbs[0]
-		return _bulb
-	except IndexError:
-		print("Bulb is not available")
-		return None
+import asyncio
+from wizbulbcontroller import WizBulbController
+from configreader import ConfigReader
 
 
 async def main():
-	"""bulb = await getlight()
-	if bulb is None:
-		return"""
-	bulb = wizlight("192.168.50.233")
+	controller: WizBulbController = WizBulbController()
+	config_reader: ConfigReader = ConfigReader("../config/schedule.json")
 
 	while True:
-		await wake(bulb)
-		await getup(bulb)
-		await work(bulb)
-		await chill(bulb)
-		await relax(bulb)
-		await sleep(bulb)
+		config: dict[str: int] = config_reader.get_current_parameters()
+		await controller.apply_config(config)
+		await asyncio.sleep(60)
 
 
 if __name__ == "__main__":
