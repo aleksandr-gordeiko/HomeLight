@@ -47,5 +47,6 @@ class ConfigReader:
 
 		actual_time: list[int] = self.first_time
 		for time in self.times:
-			if time[0] > hours and time[1] > minutes:
+			if (time[0] > hours) or (time[0] == hours and time[1] >= minutes):
 				return self.config[self._int_list_time_to_string(actual_time)]
+			actual_time = time
