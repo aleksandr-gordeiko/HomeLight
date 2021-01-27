@@ -5,10 +5,10 @@ from pywizlight.bulb import PilotBuilder
 class WizBulbController:
 
 	def __init__(self):
-		self.bulb: wizlight = await self._getlight()
+		self.bulb: wizlight = self._getlight()
 
 	@staticmethod
-	async def _getlight() -> wizlight:
+	def _getlight() -> wizlight:
 		return wizlight("192.168.50.233")
 
 	async def set_light(self, brightness: int, temperature: int) -> None:

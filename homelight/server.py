@@ -5,7 +5,7 @@ from configreader import ConfigReader
 
 async def main():
 	controller: WizBulbController = WizBulbController()
-	config_reader: ConfigReader = ConfigReader("../config/schedule.json")
+	config_reader: ConfigReader = ConfigReader("./config/schedule.json")
 
 	while True:
 		config: dict[str: int] = config_reader.get_current_parameters()
