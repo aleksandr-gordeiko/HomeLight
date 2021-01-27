@@ -5,18 +5,19 @@ from util import alert
 
 
 class WizBulbController:
-	def __init__(self):
+	def __init__(self, default_ip: str, broadcast_ip: str):
 		self.bulb = None
+		self.default_ip: str = default_ip
+		self.broadcast_ip: str = broadcast_ip
 
 	async def initialize(self):
 		self.bulb = await self._getlight()
 		if not self.bulb:
-			alert("Bulb discovery failed, using standard IP address 192.168.50.233")
-			self.bulb = wizlight("192.168.50.233")
+			alert("Bulb discovery failed, using standard IP address {}".format(self.default_ip))
+			self.bulb = wizlight(self.default_ip)
 
-	@staticmethod
-	async def _getlight() -> wizlight or None:
-		bulbs = await discovery.discover_lights("192.168.50.255")
+	async def _getlight(self) -> wizlight or None:
+		bulbs = await discovery.discover_lights(self.broadcast_ip)
 		try:
 			bulb = bulbs[0]
 			return bulb
