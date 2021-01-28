@@ -22,7 +22,7 @@ async def main(config_path: str = "./config/config.json"):
 		schedule: dict[str: int] = schedule_reader.get_current_parameters()
 		await controller.apply_config(schedule)
 		alert("Bulb config updated")
-		await asyncio.sleep(conf["update_peroid"])
+		await asyncio.sleep(conf["update_period"])
 
 
 if __name__ == '__main__':
