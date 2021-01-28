@@ -11,9 +11,19 @@ async def main(config_path: str = "./config/config.json"):
 	with open(config_path) as f:
 		conf: dict = json.load(f)
 
-	# TODO Add KeyError handling
+	if "update_period" not in conf:
+		conf["update_period"] = 60
+	if "default_bulb_ip" not in conf:
+		conf["default_bulb_ip"] = None
+	if "broadcast_ip" not in conf:
+		alert("Invalid config (no broadcast_ip), exitting")
+		return
+
 	controller: WizBulbController = WizBulbController(conf["default_bulb_ip"], conf["broadcast_ip"])
-	await controller.initialize()
+	if not await controller.initialize():
+		alert("Bulb not found, exitting")
+		return
+
 	alert("Bulb initialized")
 
 	schedule_reader: ScheduleReader = ScheduleReader(conf["schedule_config_path"])
@@ -33,3 +43,5 @@ if __name__ == '__main__':
 		loop.run_until_complete(main(config))
 	else:
 		loop.run_until_complete(main())
+
+# TODO Add bulb parameter check: if does not fit the schedule, restore

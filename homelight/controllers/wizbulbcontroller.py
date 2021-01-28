@@ -9,11 +9,14 @@ class WizBulbController:
 		self.default_ip: str = default_ip
 		self.broadcast_ip: str = broadcast_ip
 
-	async def initialize(self):
+	async def initialize(self) -> bool:
 		self.bulb = await self._getlight()
 		if not self.bulb:
-			print("Bulb discovery failed, using standard IP address {}".format(self.default_ip), file=sys.stderr)
-			self.bulb = wizlight(self.default_ip)
+			if self.default_ip:
+				print("Bulb discovery failed, using standard IP address {}".format(self.default_ip), file=sys.stderr)
+				self.bulb = wizlight(self.default_ip)
+				return True
+			return False
 
 	async def _getlight(self) -> wizlight or None:
 		bulbs = await discovery.discover_lights(self.broadcast_ip)
