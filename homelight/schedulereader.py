@@ -2,14 +2,14 @@ import json
 import datetime
 
 
-class ConfigReader:
+class ScheduleReader:
 	def __init__(self, path: str):
 		self.path: str = path
-		self.config: dict[str, dict[str: int]] = self._read_config_file()
+		self.config: dict[str, dict[str: int]] = self._read_schedule_file()
 		self.times: list[list[int]] = self._get_times()
 		self.first_time: list[int] = self._get_first_time()
 
-	def _read_config_file(self) -> dict[str, dict[str: int]]:
+	def _read_schedule_file(self) -> dict[str, dict[str: int]]:
 		with open(self.path) as f:
 			return json.load(f)
 

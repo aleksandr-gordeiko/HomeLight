@@ -1,38 +1,35 @@
 import asyncio
-from wizbulbcontroller import WizBulbController
-from configreader import ConfigReader
+from controllers.wizbulbcontroller import WizBulbController
+from schedulereader import ScheduleReader
+import sys
+import json
 
 from util import alert
 
 
-async def main(
-		config_path: str = "./config/schedule.json",
-		broadcast_ip: str = "192.168.50.255",
-		default_ip: str = "192.168.50.233",
-		update_peroid_sec: int = 60
-):
-	controller: WizBulbController = WizBulbController(default_ip, broadcast_ip)
+async def main(config_path: str = "./config/config.json"):
+	with open(config_path) as f:
+		conf: dict = json.load(f)
+
+	# TODO Add KeyError handling
+	controller: WizBulbController = WizBulbController(conf["default_bulb_ip"], conf["broadcast_ip"])
 	await controller.initialize()
 	alert("Bulb initialized")
 
-	config_reader: ConfigReader = ConfigReader(config_path)
+	schedule_reader: ScheduleReader = ScheduleReader(conf["schedule_config_path"])
 
 	while True:
-		config: dict[str: int] = config_reader.get_current_parameters()
-		await controller.apply_config(config)
+		schedule: dict[str: int] = schedule_reader.get_current_parameters()
+		await controller.apply_config(schedule)
 		alert("Bulb config updated")
-		await asyncio.sleep(update_peroid_sec)
-
-
-def run(
-		config_path: str = "./config/schedule.json",
-		broadcast_ip: str = "192.168.50.255",
-		default_ip: str = "192.168.50.233",
-		update_peroid_sec: int = 60
-):
-	loop = asyncio.get_event_loop()
-	loop.run_until_complete(main(config_path, broadcast_ip, default_ip, update_peroid_sec))
+		await asyncio.sleep(conf["update_peroid"])
 
 
 if __name__ == '__main__':
-	run()
+	loop = asyncio.get_event_loop()
+
+	if len(sys.argv) > 1:
+		config: str = sys.argv[1]
+		loop.run_until_complete(main(config))
+	else:
+		loop.run_until_complete(main())
