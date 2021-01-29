@@ -3,6 +3,7 @@ from typing import AsyncGenerator
 import sys
 import json
 
+from controllers.controller import Controller
 from controllers.wizbulbcontroller import WizBulbController
 from schedulereader import ScheduleReader
 from util import alert
@@ -17,12 +18,21 @@ async def main(config_path: str = "./config/config.json"):
 	if "default_bulb_ip" not in conf:
 		conf["default_bulb_ip"] = None
 	if "broadcast_ip" not in conf:
-		alert("Invalid config (no broadcast_ip), exitting")
+		alert("Invalid config (no broadcast_ip), aborting")
 		return
 
-	controller: WizBulbController = WizBulbController(conf["default_bulb_ip"], conf["broadcast_ip"])
+	if "controller" in conf:
+		if conf["controller"] == "wiz":
+			controller_class = WizBulbController
+		else:
+			alert("Invalid controller, aborting")
+			return
+	else:
+		controller_class = WizBulbController
+
+	controller: Controller = controller_class(conf["default_bulb_ip"], conf["broadcast_ip"])
 	if not await controller.initialize():
-		alert("Bulb not found, exitting")
+		alert("Bulb not found, aborting")
 		return
 
 	alert("Bulb initialized")
@@ -52,4 +62,3 @@ if __name__ == '__main__':
 		loop.run_until_complete(main())
 
 # TODO Add bulb storage
-# TODO replace class in server.py with interface
