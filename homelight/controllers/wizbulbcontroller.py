@@ -1,9 +1,11 @@
 from pywizlight import wizlight, discovery
 from pywizlight.bulb import PilotBuilder
-import sys
+
+from homelight.controllers.controllerinterface import ControllerInterface
+from homelight.util import alert
 
 
-class WizBulbController:
+class WizBulbController(ControllerInterface):
 	def __init__(self, default_ip: str, broadcast_ip: str):
 		self.bulb = None
 		self.default_ip: str = default_ip
@@ -13,10 +15,11 @@ class WizBulbController:
 		self.bulb = await self._getlight()
 		if not self.bulb:
 			if self.default_ip:
-				print("Bulb discovery failed, using standard IP address {}".format(self.default_ip), file=sys.stderr)
+				alert("Bulb discovery failed, using standard IP address {}".format(self.default_ip))
 				self.bulb = wizlight(self.default_ip)
 				return True
 			return False
+		return True
 
 	async def _getlight(self) -> wizlight or None:
 		bulbs = await discovery.discover_lights(self.broadcast_ip)
