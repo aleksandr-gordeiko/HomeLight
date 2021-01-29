@@ -1,9 +1,10 @@
 import asyncio
-from controllers.wizbulbcontroller import WizBulbController
-from schedulereader import ScheduleReader
+from typing import AsyncGenerator
 import sys
 import json
 
+from controllers.wizbulbcontroller import WizBulbController
+from schedulereader import ScheduleReader
 from util import alert
 
 
@@ -28,10 +29,16 @@ async def main(config_path: str = "./config/config.json"):
 
 	schedule_reader: ScheduleReader = ScheduleReader(conf["schedule_config_path"])
 
+	update_tracker: AsyncGenerator = controller.is_params_changed()
+	update: bool = True
 	while True:
-		schedule: dict[str: int] = schedule_reader.get_current_parameters()
-		await controller.apply_config(schedule)
-		alert("Bulb config updated")
+		if not await update_tracker.__anext__():
+			if update:
+				await controller.apply_config(schedule_reader.get_current_parameters())
+				alert("Bulb config updated")
+		else:
+			update = False
+
 		await asyncio.sleep(conf["update_period"])
 
 
@@ -44,4 +51,5 @@ if __name__ == '__main__':
 	else:
 		loop.run_until_complete(main())
 
-# TODO Add bulb parameter check: if does not fit the schedule, restore
+# TODO Add bulb storage
+# TODO replace class in server.py with interface

@@ -1,13 +1,13 @@
 from pywizlight import wizlight, discovery
-from pywizlight.bulb import PilotBuilder
+from pywizlight.bulb import PilotBuilder, PilotParser
 
-from homelight.controllers.controllerinterface import ControllerInterface
+from homelight.controllers.controller import Controller
 from homelight.util import alert
 
 
-class WizBulbController(ControllerInterface):
+class WizBulbController(Controller):
 	def __init__(self, default_ip: str, broadcast_ip: str):
-		self.bulb = None
+		self.bulb: wizlight or None = None
 		self.default_ip: str = default_ip
 		self.broadcast_ip: str = broadcast_ip
 
@@ -40,3 +40,10 @@ class WizBulbController(ControllerInterface):
 
 	async def apply_config(self, config: dict[str: int]):
 		await self.set_light(config["brightness"], config["temperature"])
+
+	async def get_params(self) -> dict[str: int]:
+		state: PilotParser = await self.bulb.updateState()
+		return {
+			"brightness": state.get_brightness(),
+			"temperature": state.get_colortemp()
+		}
