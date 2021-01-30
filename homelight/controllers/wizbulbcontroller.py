@@ -1,3 +1,4 @@
+import asyncio
 from pywizlight import wizlight, discovery
 from pywizlight.bulb import PilotBuilder, PilotParser
 
@@ -10,6 +11,7 @@ class WizBulbController(Controller):
 		self.bulb: wizlight or None = None
 		self.default_ip: str = default_ip
 		self.broadcast_ip: str = broadcast_ip
+		self.written_params: dict[str: int] = None
 
 	async def initialize(self) -> bool:
 		self.bulb = await self._getlight()
@@ -35,15 +37,29 @@ class WizBulbController(Controller):
 		else:
 			await self.bulb.turn_on(PilotBuilder(brightness=brightness, colortemp=temperature))
 
-	async def set_off(self):
+	async def set_off(self) -> None:
 		await self.bulb.turn_off()
 
-	async def apply_config(self, config: dict[str: int]):
+	async def apply_config(self, config: dict[str: int]) -> None:
 		await self.set_light(config["brightness"], config["temperature"])
+		self.written_params = await self.get_params()
+
+	def get_written_params(self) -> dict[str: int]:
+		return self.written_params
 
 	async def get_params(self) -> dict[str: int]:
-		state: PilotParser = await self.bulb.updateState()
+		_state: PilotParser = await self.bulb.updateState()
 		return {
-			"brightness": state.get_brightness(),
-			"temperature": state.get_colortemp()
+			"brightness": _state.get_brightness(),
+			"temperature": _state.get_colortemp()
 		}
+
+	async def is_in_rhythm(self) -> bool:
+		await self.bulb.updateState()
+		return self.bulb.state.get_scene() == "Rhythm"
+
+
+if __name__ == '__main__':
+	controller: WizBulbController = WizBulbController("192.168.50.99", "192.168.50.255")
+	asyncio.run(controller.initialize())
+	print(asyncio.run(controller.get_params()))

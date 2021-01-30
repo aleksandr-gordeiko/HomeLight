@@ -1,5 +1,4 @@
 import asyncio
-from typing import AsyncGenerator
 import sys
 import json
 
@@ -39,15 +38,16 @@ async def main(config_path: str = "./config/config.json"):
 
 	schedule_reader: ScheduleReader = ScheduleReader(conf["schedule_config_path"])
 
-	update_tracker: AsyncGenerator = controller.is_params_changed()
-	update: bool = True
+	was_in_rhythm_just_now: bool = False
 	while True:
-		if not await update_tracker.__anext__():
-			if update:
-				await controller.apply_config(schedule_reader.get_current_parameters())
-				alert("Bulb config updated")
-		else:
-			update = False
+		in_rhythm: bool = await controller.is_in_rhythm()
+		if await controller.get_params() != controller.get_written_params():
+			was_in_rhythm_just_now = False
+
+		if in_rhythm or was_in_rhythm_just_now:
+			was_in_rhythm_just_now = True
+			await controller.apply_config(schedule_reader.get_current_parameters())
+			alert("Bulb config updated")
 
 		await asyncio.sleep(conf["update_period"])
 

@@ -11,15 +11,23 @@ class Controller(abc.ABC):
 		pass
 
 	@abc.abstractmethod
-	async def set_off(self):
+	async def set_off(self) -> None:
 		pass
 
 	@abc.abstractmethod
-	async def apply_config(self, config: dict[str: int]):
+	async def apply_config(self, config: dict[str: int]) -> None:
 		pass
 
 	@abc.abstractmethod
 	async def get_params(self) -> dict[str: int]:
+		pass
+
+	@abc.abstractmethod
+	async def is_in_rhythm(self) -> bool:
+		pass
+
+	@abc.abstractmethod
+	def get_written_params(self) -> dict[str: int]:
 		pass
 
 	async def is_params_changed(self):
