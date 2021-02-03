@@ -29,7 +29,10 @@ async def main(config_path: str = "./config/config.json"):
 	else:
 		controller_class = WizBulbController
 
-	controller: Controller = controller_class(conf["default_bulb_ip"], conf["broadcast_ip"])
+	controller: Controller = controller_class(
+		conf["default_bulb_ip"],
+		conf["broadcast_ip"],
+		conf["bulb_storage_path"])
 	if not await controller.initialize():
 		alert("Bulb not found, aborting")
 		return
@@ -61,4 +64,5 @@ if __name__ == '__main__':
 	else:
 		loop.run_until_complete(main())
 
-# TODO Add bulb storage
+# TODO Add multiple bulbs support
+# TODO Add bulb check to controller

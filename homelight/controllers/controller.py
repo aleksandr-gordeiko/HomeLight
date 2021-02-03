@@ -29,13 +29,3 @@ class Controller(abc.ABC):
 	@abc.abstractmethod
 	def get_written_params(self) -> dict[str: int]:
 		pass
-
-	async def is_params_changed(self):
-		params: dict[str: int] = await self.get_params()
-		while True:
-			new_params: dict[str: int] = await self.get_params()
-			if new_params == params:
-				yield False
-			else:
-				params = new_params
-				yield True
