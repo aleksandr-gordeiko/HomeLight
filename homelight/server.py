@@ -2,8 +2,8 @@ import asyncio
 import sys
 import json
 
-from controllers.controller import Controller
-from controllers.wizbulbcontroller import WizBulbController
+from controller import Controller
+from wizbulbcontroller import WizBulbController
 from schedulereader import ScheduleReader
 from util import alert
 

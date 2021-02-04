@@ -2,8 +2,8 @@ import asyncio
 from pywizlight import wizlight, discovery
 from pywizlight.bulb import PilotBuilder, PilotParser
 
-from homelight.controllers.controller import Controller
-from homelight.bulbsmemory import *
+from controller import Controller
+from bulbsmemory import *
 
 
 class WizBulbController(Controller):
