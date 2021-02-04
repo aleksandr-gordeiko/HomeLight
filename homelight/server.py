@@ -7,7 +7,7 @@ from schedulereader import ScheduleReader
 from util import *
 
 
-async def main(config_path: str = absdir("./config/config.json")):
+async def main(config_path: str = "./config/config.json"):
 	with open(absdir(config_path)) as f:
 		conf: dict = json.load(f)
 

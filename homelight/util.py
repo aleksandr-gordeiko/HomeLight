@@ -7,7 +7,7 @@ def alert(msg: str) -> None:
 
 
 def absdir(path: str) -> str:
-	current_dir = os.path.dirname(__file__)
+	current_dir = os.path.dirname(__file__).replace("\\", "/")
 	upper_dir = "/".join(current_dir.split("/")[:-1])
 	return upper_dir + path[1:]
 
