@@ -3,45 +3,50 @@ from pywizlight import wizlight, discovery
 from pywizlight.bulb import PilotBuilder, PilotParser
 
 from homelight.controllers.controller import Controller
-from homelight.util import alert
 from homelight.bulbsmemory import *
 
 
 class WizBulbController(Controller):
-	def __init__(self, default_ip: str, broadcast_ip: str, bulbs_storage_path: str):
+	def __init__(self, broadcast_ip: str, bulbs_storage_path: str):
 		self.bulb: wizlight or None = None
-		self.default_ip: str = default_ip
 		self.broadcast_ip: str = broadcast_ip
 		self.bulbs_storage_path = bulbs_storage_path
 		self.written_params: dict[str: int] = None
 
 	async def initialize(self) -> bool:
-		known = known_bulbs(self.bulbs_storage_path, "wiz")
+		known = known_bulb_ips(self.bulbs_storage_path, "wiz")
 		while True:
 			try:
-				self.bulb = wizlight(next(known))
-				return True
+				bulb = wizlight(next(known))
+				if self.is_bulb_available(bulb):
+					self.bulb = bulb
+					return True
 			except StopIteration:
 				break
 
-		self.bulb = await self._getlight()
+		self.bulb = await self.find_bulb()
 		if not self.bulb:
-			if self.default_ip:
-				alert("Bulb discovery failed, using default IP address {}".format(self.default_ip))
-				self.bulb = wizlight(self.default_ip)
-				save_bulb(self.bulbs_storage_path, "wiz", self.bulb.ip)
-				return True
 			return False
 		save_bulb(self.bulbs_storage_path, "wiz", self.bulb.ip)
 		return True
 
-	async def _getlight(self) -> wizlight or None:
+	async def find_bulb(self) -> wizlight or None:
 		bulbs = await discovery.discover_lights(self.broadcast_ip)
 		try:
 			bulb = bulbs[0]
 			return bulb
 		except IndexError:
 			return None
+
+	async def is_bulb_available(self, bulb: wizlight) -> bool:
+		timeout = 2
+		try:
+			await asyncio.wait_for(bulb.updateState(), timeout)
+			return True
+		except asyncio.exceptions.CancelledError:
+			return False
+		except asyncio.exceptions.TimeoutError:
+			return False
 
 	async def set_light(self, brightness: int, temperature: int) -> None:
 		if brightness == 0:
@@ -72,6 +77,6 @@ class WizBulbController(Controller):
 
 
 if __name__ == '__main__':
-	controller: WizBulbController = WizBulbController("192.168.50.99", "192.168.50.255", "bulbs.json")
+	controller: WizBulbController = WizBulbController("192.168.50.255", "bulbs.json")
 	asyncio.run(controller.initialize())
 	print(asyncio.run(controller.get_params()))

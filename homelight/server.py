@@ -14,8 +14,6 @@ async def main(config_path: str = "./config/config.json"):
 
 	if "update_period" not in conf:
 		conf["update_period"] = 60
-	if "default_bulb_ip" not in conf:
-		conf["default_bulb_ip"] = None
 	if "broadcast_ip" not in conf:
 		alert("Invalid config (no broadcast_ip), aborting")
 		return
@@ -30,7 +28,6 @@ async def main(config_path: str = "./config/config.json"):
 		controller_class = WizBulbController
 
 	controller: Controller = controller_class(
-		conf["default_bulb_ip"],
 		conf["broadcast_ip"],
 		conf["bulb_storage_path"])
 	if not await controller.initialize():
@@ -65,4 +62,3 @@ if __name__ == '__main__':
 		loop.run_until_complete(main())
 
 # TODO Add multiple bulbs support
-# TODO Add bulb check to controller

@@ -1,7 +1,7 @@
 import json
 
 
-def known_bulbs(bulbs_path: str, bulb_type: str):
+def known_bulb_ips(bulbs_path: str, bulb_type: str):
 	try:
 		with open(bulbs_path) as cfg:
 			config = json.load(cfg)

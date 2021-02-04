@@ -7,6 +7,10 @@ class Controller(abc.ABC):
 		pass
 
 	@abc.abstractmethod
+	async def is_bulb_available(self, bulb) -> bool:
+		pass
+
+	@abc.abstractmethod
 	async def set_light(self, brightness: int, temperature: int) -> None:
 		pass
 
