@@ -61,3 +61,4 @@ if __name__ == '__main__':
 		loop.run_until_complete(main())
 
 # TODO Add multiple bulbs support
+# TODO Fix bug with powering off when manually set to night light

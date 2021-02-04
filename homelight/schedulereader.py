@@ -37,9 +37,9 @@ class ScheduleReader:
 		return times
 
 	def _get_first_time(self) -> list[int]:
-		keys: list = list(self.config.keys())
+		keys: list[list[int]] = self._get_times()
 		keys.sort()
-		return self._string_time_to_int_list(keys[0])
+		return keys[0]
 
 	def get_current_parameters(self) -> dict[str: int]:
 		current_time: datetime.time = datetime.datetime.now().time()
@@ -49,5 +49,7 @@ class ScheduleReader:
 		actual_time: list[int] = self.first_time
 		for time in self.times:
 			if (time[0] > hours) or (time[0] == hours and time[1] >= minutes):
+				if self.times.index(actual_time) == 0:
+					return self.config[self._int_list_time_to_string(self.times[-1])]
 				return self.config[self._int_list_time_to_string(actual_time)]
 			actual_time = time
