@@ -1,5 +1,6 @@
 import json
 import datetime
+from util import *
 
 
 class ScheduleReader:
@@ -10,7 +11,7 @@ class ScheduleReader:
 		self.first_time: list[int] = self._get_first_time()
 
 	def _read_schedule_file(self) -> dict[str, dict[str: int]]:
-		with open(self.path) as f:
+		with open(absdir(self.path)) as f:
 			return json.load(f)
 
 	@staticmethod

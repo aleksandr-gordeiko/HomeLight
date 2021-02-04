@@ -1,15 +1,14 @@
 import asyncio
-import sys
 import json
 
 from controller import Controller
 from wizbulbcontroller import WizBulbController
 from schedulereader import ScheduleReader
-from util import alert
+from util import *
 
 
-async def main(config_path: str = "./config/config.json"):
-	with open(config_path) as f:
+async def main(config_path: str = absdir("./config/config.json")):
+	with open(absdir(config_path)) as f:
 		conf: dict = json.load(f)
 
 	if "update_period" not in conf:
