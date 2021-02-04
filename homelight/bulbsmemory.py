@@ -16,6 +16,8 @@ def save_bulb(bulbs_path: str, bulb_type: str, bulb_ip: str) -> None:
 	try:
 		with open(bulbs_path, "r+") as cfg:
 			config = json.load(cfg)
+			if bulb_ip in config[bulb_type]:
+				return
 			try:
 				config[bulb_type].append(bulb_ip)
 			except KeyError:

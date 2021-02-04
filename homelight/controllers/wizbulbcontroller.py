@@ -18,7 +18,7 @@ class WizBulbController(Controller):
 		while True:
 			try:
 				bulb = wizlight(next(known))
-				if self.is_bulb_available(bulb):
+				if await self.is_bulb_available(bulb):
 					self.bulb = bulb
 					return True
 			except StopIteration:
@@ -78,5 +78,5 @@ class WizBulbController(Controller):
 
 if __name__ == '__main__':
 	controller: WizBulbController = WizBulbController("192.168.50.255", "bulbs.json")
-	asyncio.run(controller.initialize())
-	print(asyncio.run(controller.get_params()))
+	# asyncio.run(controller.initialize())
+	print(asyncio.run(controller.is_bulb_available(wizlight("192.168.50.99"))))
