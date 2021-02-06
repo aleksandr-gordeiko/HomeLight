@@ -60,8 +60,8 @@ if __name__ == '__main__':
 	else:
 		loop.run_until_complete(main())
 
-# TODO Add multiple bulbs support
-# TODO Add .dockerignore
 # TODO Investigate the "night light" parameters and apply them
-# FIXME Fix bug with powering off when manually set to night light
-# FIXME Fix server-specific bug of 6pm config at 11pm
+# TODO Update config on-the-go, when the config file changes
+# FIXME Fix bug with powering off when manually set to night lightss
+# TODO Update docs
+# TODO Add multiple bulbs support
