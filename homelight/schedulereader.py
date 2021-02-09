@@ -53,3 +53,4 @@ class ScheduleReader:
 					return self.config[self._int_list_time_to_string(self.times[-1])]
 				return self.config[self._int_list_time_to_string(actual_time)]
 			actual_time = time
+		return self.config[self._int_list_time_to_string(self.times[-1])]

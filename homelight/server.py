@@ -60,7 +60,8 @@ if __name__ == '__main__':
 	else:
 		loop.run_until_complete(main())
 
-# TODO Investigate the "night light" parameters and apply them
+# FIXME When the bulb is physically off, the script exits
+# TODO Move the while loop to a bulb-specific class as static method
 # TODO Update config on-the-go, when the config file changes
 # FIXME Fix bug with powering off when manually set to night lightss
 # TODO Update docs
