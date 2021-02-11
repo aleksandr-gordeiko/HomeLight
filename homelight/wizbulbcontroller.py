@@ -75,6 +75,20 @@ class WizBulbController(Controller):
 		await self.bulb.updateState()
 		return self.bulb.state.get_scene() == "Rhythm"
 
+	async def start_phythm(self, schedule_reader, update_period: int) -> None:
+		was_in_rhythm_just_now: bool = False
+		while True:
+			in_rhythm: bool = await self.is_in_rhythm()
+			if await self.get_params() != self.get_written_params():
+				was_in_rhythm_just_now = False
+
+			if in_rhythm or was_in_rhythm_just_now:
+				was_in_rhythm_just_now = True
+				await self.apply_config(schedule_reader.get_current_parameters())
+				alert("Bulb config updated")
+
+			await asyncio.sleep(update_period)
+
 
 if __name__ == '__main__':
 	controller: WizBulbController = WizBulbController("192.168.50.255", "bulbs.json")

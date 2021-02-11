@@ -33,3 +33,7 @@ class Controller(abc.ABC):
 	@abc.abstractmethod
 	def get_written_params(self) -> dict[str: int]:
 		pass
+
+	@abc.abstractmethod
+	async def start_phythm(self, schedule_reader, update_period: int) -> None:
+		pass
