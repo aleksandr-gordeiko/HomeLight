@@ -48,9 +48,3 @@ if __name__ == '__main__':
 		loop.run_until_complete(main(config))
 	else:
 		loop.run_until_complete(main())
-
-# FIXME When the bulb is physically off, the script exits
-# TODO Update config on-the-go, when the config file changes
-# FIXME Fix bug with powering off when manually set to night lightss
-# TODO Update docs
-# TODO Add multiple bulbs support
