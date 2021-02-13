@@ -11,7 +11,7 @@ class WizBulbController(Controller):
 		self.bulb: wizlight or None = None
 		self.broadcast_ip: str = broadcast_ip
 		self.bulbs_storage_path = bulbs_storage_path
-		self.written_params: dict[str: int] = None
+		self.written_params: tuple[dict[str: int], bool] or None = None
 
 	async def initialize(self) -> bool:
 		known = known_bulb_ips(self.bulbs_storage_path, "wiz")
@@ -66,10 +66,10 @@ class WizBulbController(Controller):
 
 	async def get_params(self) -> dict[str: int]:
 		_state: PilotParser = await self.bulb.updateState()
-		return {
+		return ({
 			"brightness": _state.get_brightness(),
 			"temperature": _state.get_colortemp()
-		}
+		}, self.bulb.status)
 
 	async def is_in_rhythm(self) -> bool:
 		await self.bulb.updateState()
@@ -92,5 +92,6 @@ class WizBulbController(Controller):
 
 if __name__ == '__main__':
 	controller: WizBulbController = WizBulbController("192.168.50.255", "bulbs.json")
-	# asyncio.run(controller.initialize())
-	print(asyncio.run(controller.is_bulb_available(wizlight("192.168.50.99"))))
+	asyncio.run(controller.initialize())
+	print(controller.bulb.status)
+	# print(asyncio.run(controller.bulb.getBulbConfig()))
