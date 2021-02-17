@@ -85,7 +85,6 @@ class WizBulbController(Controller):
 			if in_rhythm or was_in_rhythm_just_now:
 				was_in_rhythm_just_now = True
 				await self.apply_config(schedule_reader.get_current_parameters())
-				alert("Bulb config updated")
 
 			await asyncio.sleep(update_period)
 

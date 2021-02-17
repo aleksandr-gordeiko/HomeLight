@@ -5,7 +5,7 @@ and tells it what light brightness and temperature to set, according to
 your schedule.<p>
 
 <p>&nbsp;The schedule config is a <code>.json</code> file, where the "light
-points" are written, i.e. my <code>schedule.json</code>:</p>
+points" are written, e.g. my <code>schedule.json</code>:</p>
 
 ```json
 {
@@ -57,7 +57,7 @@ light bulbs</li>
 
 <p>&nbsp;The server is able to store bulbs IP's it has once found, they are
 automatically placed in a <code>.json</code>, which path is specified in
-<code>config.json</code>. i.e. my <code>./data/bulbs.json</code>:</p>
+<code>config.json</code>. e.g. my <code>./data/bulbs.json</code>:</p>
 
 ```json
 {
@@ -70,9 +70,8 @@ automatically placed in a <code>.json</code>, which path is specified in
 <h3>Current roadmap to reach alpha version:</h3>
 
 <ol>
-<li>TODO Add time gradient option</li>
+<li>FIXME The lights do not turn on in the morning</li>
 <li>TODO Add groups of bulbs</li>
-<li>TODO Add mode to just turn on the lights at the morning</li>
 <li>TODO Add multiple bulbs support</li>
 <li>To be continued..</li>
 </ol>
