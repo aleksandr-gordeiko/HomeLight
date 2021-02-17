@@ -59,7 +59,11 @@ class WizBulbController(Controller):
 
 	async def apply_config(self, config: dict[str: int]) -> None:
 		await self.set_light(config["brightness"], config["temperature"])
+		old_params = self.written_params
 		self.written_params = await self.get_params()
+		if old_params != self.written_params:
+			alert("Config updated")
+
 
 	def get_written_params(self) -> dict[str: int]:
 		return self.written_params

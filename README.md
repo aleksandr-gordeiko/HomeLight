@@ -1,5 +1,7 @@
 <h2>A module to set and maintain light rhythm in your house</h2>
 
+<span style="color:#FFAA66"><i>The application is in alpha version</i></span>
+
 <p>&ensp;It consists of a server, which interacts with your smart light bulb
 and tells it what light brightness and temperature to set, according to
 your schedule.<p>
@@ -66,12 +68,3 @@ automatically placed in a <code>.json</code>, which path is specified in
     ]
 }
 ```
-
-<h3>Current roadmap to reach alpha version:</h3>
-
-<ol>
-<li>FIXME The lights do not turn on in the morning</li>
-<li>TODO Add groups of bulbs</li>
-<li>TODO Add multiple bulbs support</li>
-<li>To be continued..</li>
-</ol>
