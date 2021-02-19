@@ -1,6 +1,7 @@
 import json
 import datetime
 from util import *
+import copy
 
 
 class ScheduleReader:
@@ -16,18 +17,12 @@ class ScheduleReader:
 
 	@staticmethod
 	def _string_time_to_int_list(time: str) -> list[int]:
-		if time.find(":") == -1:
-			return [int(time), 0]
-		else:
-			hr, mn = time.split(":")
-			return [int(hr), int(mn)]
+		hr, mn = time.split(":")
+		return [int(hr), int(mn)]
 
 	@staticmethod
 	def _int_list_time_to_string(time: list[int]) -> str:
-		if time[1] == 0:
-			return str(time[0])
-		else:
-			return "{}:{}".format(time[0], time[1])
+		return "{}:{}".format(time[0], f'{time[1]:02}')
 
 	def _get_times(self) -> list[list[int]]:
 		times: list = []
@@ -45,12 +40,11 @@ class ScheduleReader:
 		current_time: datetime.time = datetime.datetime.now().time()
 		hours: int = current_time.hour
 		minutes: int = current_time.minute
+		curtime = [hours, minutes]
 
-		actual_time: list[int] = self.first_time
-		for time in self.times:
-			if (time[0] > hours) or (time[0] == hours and time[1] >= minutes):
-				if self.times.index(actual_time) == 0:
-					return self.config[self._int_list_time_to_string(self.times[-1])]
-				return self.config[self._int_list_time_to_string(actual_time)]
-			actual_time = time
-		return self.config[self._int_list_time_to_string(self.times[-1])]
+		temp = copy.deepcopy(self.times)
+		temp.append(curtime)
+		temp.sort()
+
+		pos = temp.index(curtime)
+		return self.config[self._int_list_time_to_string(self.times[pos-1])]

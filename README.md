@@ -11,11 +11,11 @@ points" are written, e.g. my <code>schedule.json</code>:</p>
 
 ```json
 {
-  "6": {
+  "6:00": {
     "brightness": 50,
     "temperature": 2700
   },
-  "7": {
+  "7:00": {
     "brightness": 160,
     "temperature": 3100
   },
@@ -23,7 +23,7 @@ points" are written, e.g. my <code>schedule.json</code>:</p>
     "brightness": 200,
     "temperature": 4000
   },
-  "18": {
+  "18:00": {
     "brightness": 140,
     "temperature": 3000
   },
@@ -31,7 +31,7 @@ points" are written, e.g. my <code>schedule.json</code>:</p>
     "brightness": 10,
     "temperature": 2700
   },
-  "23": {
+  "23:00": {
     "brightness": 0,
     "temperature": 0
   }
