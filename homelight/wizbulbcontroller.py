@@ -1,6 +1,7 @@
 import asyncio
 from pywizlight import wizlight, discovery
 from pywizlight.bulb import PilotBuilder, PilotParser
+from pywizlight.exceptions import WizLightTimeOutError
 
 from controller import Controller
 from bulbsmemory import *
@@ -64,7 +65,6 @@ class WizBulbController(Controller):
 		if old_params != self.written_params:
 			alert("Config updated")
 
-
 	def get_written_params(self) -> dict[str: int]:
 		return self.written_params
 
@@ -82,13 +82,16 @@ class WizBulbController(Controller):
 	async def start_phythm(self, schedule_reader, update_period: int) -> None:
 		was_in_rhythm_just_now: bool = False
 		while True:
-			in_rhythm: bool = await self.is_in_rhythm()
-			if await self.get_params() != self.get_written_params():
-				was_in_rhythm_just_now = False
+			try:
+				in_rhythm: bool = await self.is_in_rhythm()
+				if await self.get_params() != self.get_written_params():
+					was_in_rhythm_just_now = False
 
-			if in_rhythm or was_in_rhythm_just_now:
-				was_in_rhythm_just_now = True
-				await self.apply_config(schedule_reader.get_current_parameters())
+				if in_rhythm or was_in_rhythm_just_now:
+					was_in_rhythm_just_now = True
+					await self.apply_config(schedule_reader.get_current_parameters())
+			except WizLightTimeOutError:
+				pass
 
 			await asyncio.sleep(update_period)
 

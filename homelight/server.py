@@ -1,6 +1,5 @@
 import asyncio
 import json
-from pywizlight.exceptions import WizLightTimeOutError
 
 from controller import Controller
 from wizbulbcontroller import WizBulbController
@@ -38,11 +37,7 @@ async def main(config_path: str = "./config/config.json"):
 
 	schedule_reader: ScheduleReader = ScheduleReader(conf["schedule_config_path"])
 
-	while True:
-		try:
-			await controller.start_phythm(schedule_reader, conf["update_period"])
-		except WizLightTimeOutError:
-			await asyncio.sleep(conf["update_period"])
+	await controller.start_phythm(schedule_reader, conf["update_period"])
 
 
 if __name__ == '__main__':
